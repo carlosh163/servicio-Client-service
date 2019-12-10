@@ -42,6 +42,7 @@ public class ClientServiceImpl implements IClientService {
 			
 			client.setNombres(persoClie.getNombres());
 			client.setApellidos(persoClie.getApellidos());
+			client.setTipoCliente(persoClie.getTipoCliente());
 			client.setTipoDocumento(persoClie.getTipoDocumento());
 			client.setNroDocumento(persoClie.getNroDocumento());
 			client.setEstado(persoClie.getEstado());
@@ -55,6 +56,28 @@ public class ClientServiceImpl implements IClientService {
 		// TODO Auto-generated method stub
 		return repo.findById(id).flatMap(client -> repo.delete(client));
 	}
+
+	@Override
+	public Flux<Client> findClientType(String descType) {
+		// TODO Auto-generated method stub
+		return repo.findBytipoCliente(descType);
+	}
+
+	@Override
+	public Mono<Client> findNroDoc(String descType) {
+		// TODO Auto-generated method stub
+		return repo.findBynroDocumento(descType);
+	}
+
+	/*@Override
+	public Flux<Client> findClientType(String descType) {
+		// TODO Auto-generated method stub
+		return repo.findAll().filter(client -> client.getNroDocumento().equals(descType)).
+				flatMap(cliente ->{
+					Flux<Client> Fcliente  = cli;
+					return Fcliente;
+				});
+	}*/
 	
 
 }

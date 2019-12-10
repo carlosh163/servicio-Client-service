@@ -16,4 +16,8 @@ public interface IClientService {
 	public Mono<Client> update(Client perso, String id);
 
 	public Mono<Void> delete(String id);
+	
+	
+	public Flux<Client> findClientType(String descType);
+	public Mono<Client> findNroDoc(String descType);
 }

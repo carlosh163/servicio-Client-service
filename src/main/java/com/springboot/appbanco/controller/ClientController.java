@@ -86,4 +86,17 @@ public class ClientController {
 		return service.delete(id);
 	}
 	
+	
+	//REQ01: BUSQUEDA POR TIPO DE CLIENTE.::
+	
+	@GetMapping("/BuscarClientePorTipo/{typeClient}")
+	public Flux<Client> findByTypeClient(@PathVariable String typeClient){
+		return service.findClientType(typeClient);
+	}
+	
+	@GetMapping("/BuscarClientePorNroDoc/{nroDoc}")
+	public Mono<Client> findByNroDoc(@PathVariable String nroDoc){
+		return service.findNroDoc(nroDoc);
+	}
+	
 }
