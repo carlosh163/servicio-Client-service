@@ -1,6 +1,7 @@
 package com.springboot.appbanco.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -71,7 +72,7 @@ public class ClientController {
 	}
 	
 	@PostMapping
-	public Mono<Client> create(@RequestBody Client perso){
+	public Flux<Client> create(@RequestBody List<Client> perso){
 		return service.create(perso);
 	}
 	

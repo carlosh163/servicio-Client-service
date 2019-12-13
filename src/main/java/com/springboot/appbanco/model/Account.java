@@ -1,71 +1,109 @@
 package com.springboot.appbanco.model;
 
+import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import lombok.Data;
+
+//Ahorro.
+
+@Data
 public class Account {
 
 	@Id
 	private String codAccount;
-	private String ProductType; // Cuenta Bancarias o Producto Credito.
 	
-	private String AccountType; // C.B = Ahorro, CU.Corriente, CU.PlazoFijo. -- CRED = Personal, Empresarial, Tarjeta Credito, Adelanto Efectivo
+	@Size(min = 3,message ="Tipo de Producto debe tener minimo 3 caracteres")
+	private Integer accountNumber;
 	
-	private List<Client> customerList; //Todos los Clientes que poseen una cuenta
+	//@JsonSerialize(using = ToStringSerializer.class)
 	
-	//private List<headline> headlinesList; // Todos los Titulares..
+	@JsonFormat(pattern = "dd-MM-yyyy",shape = Shape.STRING)
+	private Date openingDate; // Fecha Apertura
 	
-	private List<Person> PersonAuthorizedList;
+	private double balance; //saldo
 	
-	private double saldo;
-	private char state; //Activo o Inactivo.
+	private List<Client> customerList; //Todos los Clientes que poseen una cuenta (Titulares)
+	private List<PersonAuthorized> personAuthorizedList; //Personas Autorizadas
 	
-	
+	private char accountstatus; //Activo o Inactivo.
+
 	public String getCodAccount() {
 		return codAccount;
 	}
+
 	public void setCodAccount(String codAccount) {
 		this.codAccount = codAccount;
 	}
-	public String getProductType() {
-		return ProductType;
+
+	public Integer getAccountNumber() {
+		return accountNumber;
 	}
-	public void setProductType(String productType) {
-		ProductType = productType;
+
+	public void setAccountNumber(Integer accountNumber) {
+		this.accountNumber = accountNumber;
 	}
-	public String getAccountType() {
-		return AccountType;
+
+	
+
+	public Date getOpeningDate() {
+		return openingDate;
 	}
-	public void setAccountType(String accountType) {
-		AccountType = accountType;
+
+	public void setOpeningDate(Date openingDate) {
+		this.openingDate = openingDate;
 	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
 	public List<Client> getCustomerList() {
 		return customerList;
 	}
+
 	public void setCustomerList(List<Client> customerList) {
 		this.customerList = customerList;
 	}
-	public List<Person> getPersonAuthorizedList() {
-		return PersonAuthorizedList;
+
+	
+	public List<PersonAuthorized> getPersonAuthorizedList() {
+		return personAuthorizedList;
 	}
-	public void setPersonAuthorizedList(List<Person> personAuthorizedList) {
-		PersonAuthorizedList = personAuthorizedList;
+
+	public void setPersonAuthorizedList(List<PersonAuthorized> personAuthorizedList) {
+		this.personAuthorizedList = personAuthorizedList;
 	}
-	public double getSaldo() {
-		return saldo;
+
+	public char getAccountstatus() {
+		return accountstatus;
 	}
-	public void setSaldo(double saldo) {
-		this.saldo = saldo;
+
+	public void setAccountstatus(char accountstatus) {
+		this.accountstatus = accountstatus;
 	}
-	public char getState() {
-		return state;
-	}
-	public void setState(char state) {
-		this.state = state;
-	}
+
+	
+
+	
+	
+	
+	
+	
+	
 	
 	
 	

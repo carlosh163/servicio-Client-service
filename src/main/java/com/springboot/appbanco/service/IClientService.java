@@ -1,5 +1,7 @@
 package com.springboot.appbanco.service;
 
+import java.util.List;
+
 import com.springboot.appbanco.model.Client;
 
 import reactor.core.publisher.Flux;
@@ -11,7 +13,7 @@ public interface IClientService {
 
 	public Mono<Client> findById(String id);
 
-	public Mono<Client> create(Client perso);
+	public Flux<Client> create(List<Client> perso);
 
 	public Mono<Client> update(Client perso, String id);
 

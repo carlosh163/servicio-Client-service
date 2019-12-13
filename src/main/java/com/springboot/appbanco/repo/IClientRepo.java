@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface IClientRepo extends ReactiveMongoRepository<Client,String>{
 
-	Flux<Client> findBytipoCliente(String typeClient);
-	Mono<Client> findBynroDocumento (String typeDoc);
+	Flux<Client> findByclientType(String typeClient);
+	Mono<Client> findBydocumentNumber (String typeDoc);
 	
 }

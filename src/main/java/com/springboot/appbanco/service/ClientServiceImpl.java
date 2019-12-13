@@ -1,5 +1,7 @@
 package com.springboot.appbanco.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +31,13 @@ public class ClientServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Mono<Client> create(Client persoClie) {
-		return repo.save(persoClie);
+	public Flux<Client> create(List<Client> persoClie) {
+		Flux<Client> fClie = null;
+		for(Client  objC:persoClie) {
+			fClie.just(objC);
+			repo.save(objC).subscribe();
+		}
+		return fClie;
 	}
 
 	@Override
@@ -40,12 +47,12 @@ public class ClientServiceImpl implements IClientService {
 			
 			//char estado =client.getEstado();
 			
-			client.setNombres(persoClie.getNombres());
+			/*client.setNombres(persoClie.getNombres());
 			client.setApellidos(persoClie.getApellidos());
 			client.setTipoCliente(persoClie.getTipoCliente());
 			client.setTipoDocumento(persoClie.getTipoDocumento());
 			client.setNroDocumento(persoClie.getNroDocumento());
-			client.setEstado(persoClie.getEstado());
+			client.setEstado(persoClie.getEstado());*/
 			//client.setAccountsList(accountsList);
 			return repo.save(client);
 		});
@@ -60,13 +67,13 @@ public class ClientServiceImpl implements IClientService {
 	@Override
 	public Flux<Client> findClientType(String descType) {
 		// TODO Auto-generated method stub
-		return repo.findBytipoCliente(descType);
+		return repo.findByclientType(descType);
 	}
 
 	@Override
 	public Mono<Client> findNroDoc(String descType) {
 		// TODO Auto-generated method stub
-		return repo.findBynroDocumento(descType);
+		return repo.findBydocumentNumber(descType);
 	}
 
 	/*@Override
