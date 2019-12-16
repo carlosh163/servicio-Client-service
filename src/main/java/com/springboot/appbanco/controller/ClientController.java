@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.appbanco.model.Account;
 import com.springboot.appbanco.model.Client;
 import com.springboot.appbanco.service.IClientService;
 
@@ -72,9 +73,15 @@ public class ClientController {
 	}
 	
 	@PostMapping
-	public Flux<Client> create(@RequestBody List<Client> perso){
-		return service.create(perso);
+	public Flux<Client> create(@RequestBody Account account){
+		return service.create(account);
 	}
+	
+	@PostMapping("/RegistrarLocal")
+	public Flux<Client> createsL(@RequestBody List<Client> client){
+		return service.createL(client);
+	}
+	
 	
 	
 	@PutMapping("/{id}")

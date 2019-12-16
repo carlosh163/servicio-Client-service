@@ -12,15 +12,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
-import lombok.Data;
 
 //Ahorro.
 
-@Data
 public class Account {
 
-	@Id
-	private String codAccount;
+	
+	//private String codAccount;
 	
 	@Size(min = 3,message ="Tipo de Producto debe tener minimo 3 caracteres")
 	private Integer accountNumber;
@@ -37,13 +35,13 @@ public class Account {
 	
 	private char accountstatus; //Activo o Inactivo.
 
-	public String getCodAccount() {
+	/*public String getCodAccount() {
 		return codAccount;
 	}
 
 	public void setCodAccount(String codAccount) {
 		this.codAccount = codAccount;
-	}
+	}*/
 
 	public Integer getAccountNumber() {
 		return accountNumber;
