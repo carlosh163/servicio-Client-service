@@ -23,6 +23,12 @@ public class Account {
 	@Size(min = 3,message ="Tipo de Producto debe tener minimo 3 caracteres")
 	private Integer accountNumber;
 	
+	private String productType; // Cuenta Bancarias o Producto Credito.
+
+	private String accountType; // C.B = Ahorro, CU.Corriente, CU.PlazoFijo. -- CRED = Personal, Empresarial,
+								// Tarjeta Credito, Adelanto Efectivo
+	
+	
 	//@JsonSerialize(using = ToStringSerializer.class)
 	
 	@JsonFormat(pattern = "dd-MM-yyyy",shape = Shape.STRING)
@@ -92,6 +98,22 @@ public class Account {
 
 	public void setAccountstatus(char accountstatus) {
 		this.accountstatus = accountstatus;
+	}
+
+	public String getProductType() {
+		return productType;
+	}
+
+	public void setProductType(String productType) {
+		this.productType = productType;
+	}
+
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
 	}
 
 	

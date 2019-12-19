@@ -25,4 +25,8 @@ public interface IClientService {
 	public Mono<Client> findNroDoc(String descType);
 	
 	public Flux<Client> createL(List<Client> client);
+	
+	public Flux<Client> findClientsByAccountNumber(Integer accNumber);
+	
+	public Mono<Client> createPClient(Client client);
 }

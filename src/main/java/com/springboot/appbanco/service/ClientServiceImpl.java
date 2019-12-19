@@ -1,6 +1,5 @@
 package com.springboot.appbanco.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +42,46 @@ public class ClientServiceImpl implements IClientService {
 			return objacc.getCustomerList();
 		}).flatMapMany( lstC-> Flux.fromIterable(lstC))
 				.flatMap(objC->{
+					
+					String DNI = objC.getDocumentNumber();
+					
+					
 					Account objAcNew = new Account();
 					
+					objAcNew.setProductType(account.getProductType());
+					objAcNew.setAccountType(account.getAccountType());
 					objAcNew.setAccountNumber(account.getAccountNumber());
 					objAcNew.setOpeningDate(account.getOpeningDate());
 					objAcNew.setBalance(account.getBalance());
 					objAcNew.setAccountstatus(account.getAccountstatus());
-					
-					
 					objC.getAccountList().add(objAcNew); //List<Client> info..
 					
 					
-					return repo.save(objC);
+					
+					return repo.findBydocumentNumber(DNI).switchIfEmpty(Mono.just(objC)).flatMap(objAC ->{
+						if(objAC.getIdClient()!=null) {
+							
+							
+							return repo.findById(objAC.getIdClient()).flatMap(client ->{
+								
+								client.getAccountList().add(objAcNew);
+								return repo.save(client);
+							});
+							
+							
+						}else {
+							return repo.save(objAC);
+						}
+						
+					});
+					
+					
+					
+					
+					
+					
+					
+					//return repo.save(objC);
 				});
 			
 		/*return Flux.fromIterable(lstClient).flatMap(objClient ->{
@@ -118,6 +145,16 @@ public class ClientServiceImpl implements IClientService {
 	public Mono<Client> findNroDoc(String descType) {
 		// TODO Auto-generated method stub
 		return repo.findBydocumentNumber(descType);
+	}
+
+	@Override
+	public Flux<Client> findClientsByAccountNumber(Integer accNumber) {
+		return repo.findByClientByAccountNumber(accNumber);
+	}
+
+	@Override
+	public Mono<Client> createPClient(Client clie) {
+		return repo.save(clie);
 	}
 
 	

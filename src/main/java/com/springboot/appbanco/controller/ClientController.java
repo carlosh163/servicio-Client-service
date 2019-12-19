@@ -1,5 +1,6 @@
 package com.springboot.appbanco.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,5 +107,83 @@ public class ClientController {
 	public Mono<Client> findByNroDoc(@PathVariable String nroDoc){
 		return service.findNroDoc(nroDoc);
 	}
+	
+	//Consumo Trans:
+	
+		@PutMapping("/updateBalanceAccountByAccountNumber/{accountNumber}/{quantity}")
+		public Flux<Client> updateBalanceAccountByAccountNumber(@PathVariable Integer accountNumber,@PathVariable double quantity){
+			
+			return service.findClientsByAccountNumber(accountNumber).flatMap(client ->{
+				List<Account> listAcc = client.getAccountList();
+				
+				Account m = new Account();
+				for(int i= 0;i<listAcc.size();i++) { //Account obj:listAcc
+					Account obj = listAcc.get(i);
+					
+					if(  accountNumber.equals(obj.getAccountNumber()) ) {
+						m.setAccountNumber(obj.getAccountNumber());
+						m.setProductType(obj.getProductType());
+						m.setAccountType(obj.getAccountType());
+						
+						m.setOpeningDate(obj.getOpeningDate());
+						m.setAccountstatus(obj.getAccountstatus());
+						
+						m.setBalance(obj.getBalance()+quantity);
+						
+						listAcc.set(i, m);
+					}
+					
+				}
+				client.setAccountList(listAcc);
+				return service.createPClient(client);
+				
+			});
+			
+		}
+		
+		
+		
+		@PutMapping("/updateBalanceAccountRetireByAccountNumber/{accountNumber}/{quantity}")
+		public Flux<Client> updateBalanceAccountRetireByAccountNumber(@PathVariable Integer accountNumber,@PathVariable double quantity){
+			
+			return service.findClientsByAccountNumber(accountNumber).flatMap(client ->{
+				List<Account> listAcc = client.getAccountList();
+				
+				Account m = new Account();
+				for(int i= 0;i<listAcc.size();i++) { //Account obj:listAcc
+					Account obj = listAcc.get(i);
+					
+					if(  accountNumber.equals(obj.getAccountNumber()) ) {
+						
+						
+						//validacion sin negativo:
+						if(obj.getBalance()-quantity>=0) {
+							m.setAccountNumber(obj.getAccountNumber());
+							m.setProductType(obj.getProductType());
+							m.setAccountType(obj.getAccountType());
+							
+							m.setOpeningDate(obj.getOpeningDate());
+							m.setAccountstatus(obj.getAccountstatus());
+							
+							m.setBalance(obj.getBalance()-quantity);
+							
+							listAcc.set(i, m);
+							client.setAccountList(listAcc);
+						}else {
+							System.out.println("Error saldo insuficiente..");
+							return Mono.empty();
+						}
+						
+						
+						
+					}
+					
+				}
+				
+				return service.createPClient(client);
+				
+			});
+			
+		}
 	
 }
