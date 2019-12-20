@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.springboot.appbanco.model.Account;
 import com.springboot.appbanco.model.Client;
+import com.springboot.appbanco.model.CreditAccount;
 import com.springboot.appbanco.repo.IClientRepo;
 
 import reactor.core.publisher.Flux;
@@ -77,27 +78,8 @@ public class ClientServiceImpl implements IClientService {
 					
 					
 					
-					
-					
-					
-					
-					//return repo.save(objC);
 				});
 			
-		/*return Flux.fromIterable(lstClient).flatMap(objClient ->{
-			/*List<Account> lstAT = new ArrayList<>(); 
-			lstAT.add(account);
-			
-			objClient.setAccountList(lstAT);
-			//repo.save(objClient);
-			
-			//return Flux.empty();
-			return repo.save(objClient);
-		});*/
-		/*Client objC = null;
-		return Mono.just(repo.save(objC));*/
-		
-		//return Mono.empty();
 	}
 	
 	@Override
@@ -155,6 +137,53 @@ public class ClientServiceImpl implements IClientService {
 	@Override
 	public Mono<Client> createPClient(Client clie) {
 		return repo.save(clie);
+	}
+
+	@Override
+	public Mono<Client> createClientACredit(CreditAccount account) {
+		
+		
+		System.out.println("Ingreso a Crear un CLiente Credito...");
+				return Mono.just(account).flatMap(objacc->{
+					
+							
+							Client objC = objacc.getCustomer();
+							
+							String DNI = objC.getDocumentNumber();
+							
+							
+							CreditAccount objAcNew = new CreditAccount();
+							
+							objAcNew.setProductType(account.getProductType());
+							objAcNew.setAccountType(account.getAccountType());
+							objAcNew.setAccountNumber(account.getAccountNumber());
+							objAcNew.setOpeningDate(account.getOpeningDate());
+							objAcNew.setBalance(account.getCreditLimit());
+							objAcNew.setAccountstatus(account.getAccountstatus());							
+							objAcNew.setConsumption(0);
+							objAcNew.setCreditLimit(account.getCreditLimit());
+							
+							objC.getCreditAccountList().add(objAcNew); //List<Client> info..
+							
+							
+							
+							return repo.findBydocumentNumber(DNI).switchIfEmpty(Mono.just(objC)).flatMap(objAC ->{
+								if(objAC.getIdClient()!=null) {
+									
+									
+									return repo.findById(objAC.getIdClient()).flatMap(client ->{
+										
+										client.getCreditAccountList().add(objAcNew);
+										return repo.save(client);
+									});
+									
+									
+								}else {
+									return repo.save(objAC);
+								}
+								
+							});
+						});
 	}
 
 	

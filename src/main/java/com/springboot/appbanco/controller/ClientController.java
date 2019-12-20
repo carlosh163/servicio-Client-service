@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.appbanco.model.Account;
 import com.springboot.appbanco.model.Client;
+import com.springboot.appbanco.model.CreditAccount;
 import com.springboot.appbanco.service.IClientService;
 
 import reactor.core.publisher.Flux;
@@ -185,5 +186,119 @@ public class ClientController {
 			});
 			
 		}
+		
+		
+		//Apertura Cuenta Credito:::::
+		
+		
+		@PostMapping("/SaveAccountCredit")
+		public Mono<Client> createAccountCredit(@RequestBody CreditAccount account){
+			return service.createClientACredit(account);
+		}
+		
+		
+		// Para Transacciones: Consumos:
+		
+		@PutMapping("/updateBalanceAccountByAccountNumberConsumer/{accountNumber}/{quantity}")
+		public Flux<Client> updateBalanceAccountByAccountNumberConsumer(@PathVariable Integer accountNumber,@PathVariable double quantity){
+			
+			return service.findClientsByAccountNumber(accountNumber).flatMap(client ->{
+				List<CreditAccount> listCredAcc = client.getCreditAccountList();
+				
+				CreditAccount m = new CreditAccount();
+				for(int i= 0;i<listCredAcc.size();i++) { //Account obj:listAcc
+					CreditAccount obj = listCredAcc.get(i);
+					
+					if(  accountNumber.equals(obj.getAccountNumber()) ) {
+						
+						
+						
+						if(quantity>obj.getBalance()) {
+							System.out.println("No se puede consumir más de su Saldo Actual."+obj.getBalance());
+							return Mono.empty();
+						}else {
+							
+							
+							
+							m.setAccountNumber(obj.getAccountNumber());
+							m.setProductType(obj.getProductType());
+							m.setAccountType(obj.getAccountType());
+							
+							m.setOpeningDate(obj.getOpeningDate());
+							m.setAccountstatus(obj.getAccountstatus());
+							
+							m.setBalance(obj.getBalance()-quantity);
+							m.setConsumption(obj.getConsumption() + quantity);
+							
+							listCredAcc.set(i, m);
+							client.setCreditAccountList(listCredAcc);
+							
+							
+						}
+						
+						
+						
+					}
+					
+				}
+				
+				return service.createPClient(client);
+				
+			});
+			
+		}
+		
+		
+		
+		@PutMapping("/updateBalanceAccounByAccountNumberPayment/{accountNumber}/{quantity}")
+		public Flux<Client> updateBalanceAccounByAccountNumberPayment(@PathVariable Integer accountNumber,@PathVariable double quantity){
+			
+			return service.findClientsByAccountNumber(accountNumber).flatMap(client ->{
+				List<CreditAccount> listCredAcc = client.getCreditAccountList();
+				
+				CreditAccount m = new CreditAccount();
+				for(int i= 0;i<listCredAcc.size();i++) { //Account obj:listAcc
+					CreditAccount obj = listCredAcc.get(i);
+					
+					if(  accountNumber.equals(obj.getAccountNumber()) ) {
+						
+						
+						
+						if(quantity>obj.getConsumption()) {
+							System.out.println("No se puede pagar más de su Consumo Actual (Deuda)."+obj.getConsumption());
+							return Mono.empty();
+						}else {
+							
+							
+							
+							m.setAccountNumber(obj.getAccountNumber());
+							m.setProductType(obj.getProductType());
+							m.setAccountType(obj.getAccountType());
+							
+							m.setOpeningDate(obj.getOpeningDate());
+							m.setAccountstatus(obj.getAccountstatus());
+							
+							m.setBalance(obj.getBalance()+quantity);
+							m.setConsumption(obj.getConsumption() - quantity);
+							
+							listCredAcc.set(i, m);
+							client.setCreditAccountList(listCredAcc);
+							
+							
+						}
+						
+						
+						
+					}
+					
+				}
+				
+				return service.createPClient(client);
+				
+			});
+			
+		}
+		
+		
 	
 }

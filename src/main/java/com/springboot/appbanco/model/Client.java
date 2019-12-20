@@ -19,6 +19,9 @@ public class Client extends Person{
 	
 	
 	private List<Account> accountList = new ArrayList<Account>();
+	
+	private List<CreditAccount> creditAccountList = new ArrayList<CreditAccount>();
+	
 	private char state;
 	
 	public Client() {
@@ -62,6 +65,18 @@ public class Client extends Person{
 
 	public void setState(char state) {
 		this.state = state;
+	}
+
+
+
+	public List<CreditAccount> getCreditAccountList() {
+		return creditAccountList;
+	}
+
+
+
+	public void setCreditAccountList(List<CreditAccount> creditAccountList) {
+		this.creditAccountList = creditAccountList;
 	}
 
 

@@ -20,4 +20,5 @@ public interface IClientRepo extends ReactiveMongoRepository<Client,String>{
 	
 	@Query("{'accountList.accountNumber' : ?0}")
 	Flux<Client> findByClientByAccountNumber(Integer accountNumber);
+	//findByFechaAperturaBetween(String fechaini,String fechaFIN);
 }

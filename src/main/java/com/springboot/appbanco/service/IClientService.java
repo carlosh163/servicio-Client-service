@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.springboot.appbanco.model.Account;
 import com.springboot.appbanco.model.Client;
+import com.springboot.appbanco.model.CreditAccount;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,4 +30,7 @@ public interface IClientService {
 	public Flux<Client> findClientsByAccountNumber(Integer accNumber);
 	
 	public Mono<Client> createPClient(Client client);
+	
+	
+	public Mono<Client> createClientACredit(CreditAccount account);
 }
