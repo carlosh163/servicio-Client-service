@@ -33,4 +33,6 @@ public interface IClientService {
 	
 	
 	public Mono<Client> createClientACredit(CreditAccount account);
+	
+	public Flux<Client> findClientsByAccountNumberListCredit(Integer accNumber);
 }

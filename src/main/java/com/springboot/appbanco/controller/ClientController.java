@@ -1,6 +1,5 @@
 package com.springboot.appbanco.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +26,12 @@ import com.springboot.appbanco.model.Client;
 import com.springboot.appbanco.model.CreditAccount;
 import com.springboot.appbanco.service.IClientService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+@Api(tags = "Client")
 @RefreshScope
 @RestController
 @RequestMapping("api/client")
@@ -63,7 +64,7 @@ public class ClientController {
 		 return new ResponseEntity<Map<String,String>>(json,HttpStatus.OK);
 	}
 	
-	
+	@ApiOperation(value = "Search all customers", notes = "Returning customers, each client has a list of their Bank Accounts and Credit Accounts.")
 	@GetMapping
 	public Flux<Client> findAll(){
 		return service.findAll();
@@ -104,6 +105,8 @@ public class ClientController {
 		return service.findClientType(typeClient);
 	}
 	
+	
+	@ApiOperation(value = "RQ10-Check the balance available on your products such as: bank accounts and credit cards.", notes = " It returns the Client's data with a list of its Bank Accounts and another list of Credit Accounts with all its values ​​per account.")
 	@GetMapping("/BuscarClientePorNroDoc/{nroDoc}")
 	public Mono<Client> findByNroDoc(@PathVariable String nroDoc){
 		return service.findNroDoc(nroDoc);
@@ -202,7 +205,7 @@ public class ClientController {
 		@PutMapping("/updateBalanceAccountByAccountNumberConsumer/{accountNumber}/{quantity}")
 		public Flux<Client> updateBalanceAccountByAccountNumberConsumer(@PathVariable Integer accountNumber,@PathVariable double quantity){
 			
-			return service.findClientsByAccountNumber(accountNumber).flatMap(client ->{
+			return service.findClientsByAccountNumberListCredit(accountNumber).flatMap(client ->{
 				List<CreditAccount> listCredAcc = client.getCreditAccountList();
 				
 				CreditAccount m = new CreditAccount();
@@ -229,6 +232,7 @@ public class ClientController {
 							
 							m.setBalance(obj.getBalance()-quantity);
 							m.setConsumption(obj.getConsumption() + quantity);
+							m.setCreditLimit(obj.getCreditLimit());
 							
 							listCredAcc.set(i, m);
 							client.setCreditAccountList(listCredAcc);
@@ -253,7 +257,7 @@ public class ClientController {
 		@PutMapping("/updateBalanceAccounByAccountNumberPayment/{accountNumber}/{quantity}")
 		public Flux<Client> updateBalanceAccounByAccountNumberPayment(@PathVariable Integer accountNumber,@PathVariable double quantity){
 			
-			return service.findClientsByAccountNumber(accountNumber).flatMap(client ->{
+			return service.findClientsByAccountNumberListCredit(accountNumber).flatMap(client ->{
 				List<CreditAccount> listCredAcc = client.getCreditAccountList();
 				
 				CreditAccount m = new CreditAccount();
@@ -280,6 +284,7 @@ public class ClientController {
 							
 							m.setBalance(obj.getBalance()+quantity);
 							m.setConsumption(obj.getConsumption() - quantity);
+							m.setCreditLimit(obj.getCreditLimit());
 							
 							listCredAcc.set(i, m);
 							client.setCreditAccountList(listCredAcc);

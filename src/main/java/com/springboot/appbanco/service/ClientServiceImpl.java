@@ -198,5 +198,10 @@ public class ClientServiceImpl implements IClientService {
 				});
 	}*/
 	
+	@Override
+	public Flux<Client> findClientsByAccountNumberListCredit(Integer accNumber) {
+		return repo.findByClientByAccountNumberListCredit(accNumber);
+	}
+	
 
 }
