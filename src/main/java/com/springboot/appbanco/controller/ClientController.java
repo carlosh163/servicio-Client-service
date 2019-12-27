@@ -1,5 +1,7 @@
 package com.springboot.appbanco.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,10 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.reactive.Request;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.MediaType.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.springboot.appbanco.exception.ModeloNotFoundException;
+import com.springboot.appbanco.exception.ResponseExceptionHandler;
 import com.springboot.appbanco.model.Account;
 import com.springboot.appbanco.model.Client;
 import com.springboot.appbanco.model.CreditAccount;
@@ -44,6 +46,9 @@ public class ClientController {
 
   @Autowired
   private IClientService service;
+  
+  @Autowired
+  private ResponseExceptionHandler exception;
 
   @Value("${configuracion.texto}")
   private String texto;
@@ -79,8 +84,9 @@ public class ClientController {
     	      .contentType(APPLICATION_JSON)
     	      .body(p))
     		.cast(ResponseEntity.class)
-    		.defaultIfEmpty( new ModeloNotFoundException("s"));
-    	     // .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontro este Cliente"));
+    		.defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND)
+			.body(exception.manejarModeloExcepciones(new ModeloNotFoundException("No se encontro "+id)  )));
+    	     //.defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Client("NO HAY")));
     
     
 	//return null;

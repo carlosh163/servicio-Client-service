@@ -23,9 +23,9 @@ public class ResponseExceptionHandler {
   }
 
   @ExceptionHandler(ModeloNotFoundException.class)
-  public final ResponseEntity<ExceptionResponse> manejarModeloExcepciones(ModeloNotFoundException ex, WebRequest request) {
-    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
-        request.getDescription(false));
+  public final ResponseEntity<ExceptionResponse> manejarModeloExcepciones(ModeloNotFoundException ex) {
+    ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage());
+ //request.getDescription(false));
     //return new ResponseEntity<Object>(exceptionResponse, HttpStatus.NOT_FOUND);
     
     //return new Mono<ResponseEntity<Object>>(exceptionResponse,HttpStatus.BAD_GATEWAY);
