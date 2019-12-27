@@ -17,114 +17,114 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 public class Account {
 
-	
-	//private String codAccount;
-	
-	@Size(min = 3,message ="Tipo de Producto debe tener minimo 3 caracteres")
-	private Integer accountNumber;
-	
-	private String productType; // Cuenta Bancarias o Producto Credito.
+  
+  //private String codAccount;
+  
+  @Size(min = 3,message ="Tipo de Producto debe tener minimo 3 caracteres")
+  private Integer accountNumber;
+  
+  private String productType; // Cuenta Bancarias o Producto Credito.
 
-	private String accountType; // C.B = Ahorro, CU.Corriente, CU.PlazoFijo. -- CRED = Personal, Empresarial,
-								// Tarjeta Credito, Adelanto Efectivo
-	
-	
-	//@JsonSerialize(using = ToStringSerializer.class)
-	
-	@JsonFormat(pattern = "dd-MM-yyyy",shape = Shape.STRING)
-	private Date openingDate; // Fecha Apertura
-	
-	private double balance; //saldo
-	
-	private List<Client> customerList; //Todos los Clientes que poseen una cuenta (Titulares)
-	private List<PersonAuthorized> personAuthorizedList; //Personas Autorizadas
-	
-	private char accountstatus; //Activo o Inactivo.
+  private String accountType; // C.B = Ahorro, CU.Corriente, CU.PlazoFijo. -- CRED = Personal, Empresarial,
+                // Tarjeta Credito, Adelanto Efectivo
+  
+  
+  //@JsonSerialize(using = ToStringSerializer.class)
+  
+  @JsonFormat(pattern = "dd-MM-yyyy",shape = Shape.STRING)
+  private Date openingDate; // Fecha Apertura
+  
+  private double balance; //saldo
+  
+  private List<Client> customerList; //Todos los Clientes que poseen una cuenta (Titulares)
+  private List<PersonAuthorized> personAuthorizedList; //Personas Autorizadas
+  
+  private char accountstatus; //Activo o Inactivo.
 
-	/*public String getCodAccount() {
-		return codAccount;
-	}
+  /*public String getCodAccount() {
+    return codAccount;
+  }
 
-	public void setCodAccount(String codAccount) {
-		this.codAccount = codAccount;
-	}*/
+  public void setCodAccount(String codAccount) {
+    this.codAccount = codAccount;
+  }*/
 
-	public Integer getAccountNumber() {
-		return accountNumber;
-	}
+  public Integer getAccountNumber() {
+    return accountNumber;
+  }
 
-	public void setAccountNumber(Integer accountNumber) {
-		this.accountNumber = accountNumber;
-	}
+  public void setAccountNumber(Integer accountNumber) {
+    this.accountNumber = accountNumber;
+  }
 
-	
+  
 
-	public Date getOpeningDate() {
-		return openingDate;
-	}
+  public Date getOpeningDate() {
+    return openingDate;
+  }
 
-	public void setOpeningDate(Date openingDate) {
-		this.openingDate = openingDate;
-	}
+  public void setOpeningDate(Date openingDate) {
+    this.openingDate = openingDate;
+  }
 
-	public double getBalance() {
-		return balance;
-	}
+  public double getBalance() {
+    return balance;
+  }
 
-	public void setBalance(double balance) {
-		this.balance = balance;
-	}
+  public void setBalance(double balance) {
+    this.balance = balance;
+  }
 
-	public List<Client> getCustomerList() {
-		return customerList;
-	}
+  public List<Client> getCustomerList() {
+    return customerList;
+  }
 
-	public void setCustomerList(List<Client> customerList) {
-		this.customerList = customerList;
-	}
+  public void setCustomerList(List<Client> customerList) {
+    this.customerList = customerList;
+  }
 
-	
-	public List<PersonAuthorized> getPersonAuthorizedList() {
-		return personAuthorizedList;
-	}
+  
+  public List<PersonAuthorized> getPersonAuthorizedList() {
+    return personAuthorizedList;
+  }
 
-	public void setPersonAuthorizedList(List<PersonAuthorized> personAuthorizedList) {
-		this.personAuthorizedList = personAuthorizedList;
-	}
+  public void setPersonAuthorizedList(List<PersonAuthorized> personAuthorizedList) {
+    this.personAuthorizedList = personAuthorizedList;
+  }
 
-	public char getAccountstatus() {
-		return accountstatus;
-	}
+  public char getAccountstatus() {
+    return accountstatus;
+  }
 
-	public void setAccountstatus(char accountstatus) {
-		this.accountstatus = accountstatus;
-	}
+  public void setAccountstatus(char accountstatus) {
+    this.accountstatus = accountstatus;
+  }
 
-	public String getProductType() {
-		return productType;
-	}
+  public String getProductType() {
+    return productType;
+  }
 
-	public void setProductType(String productType) {
-		this.productType = productType;
-	}
+  public void setProductType(String productType) {
+    this.productType = productType;
+  }
 
-	public String getAccountType() {
-		return accountType;
-	}
+  public String getAccountType() {
+    return accountType;
+  }
 
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
+  public void setAccountType(String accountType) {
+    this.accountType = accountType;
+  }
 
-	
+  
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
+  
+  
+  
+  
+  
+  
+  
+  
+  
 }

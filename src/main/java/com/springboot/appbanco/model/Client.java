@@ -11,6 +11,12 @@ import lombok.Data;
 @Document(collection = "client")
 public class Client extends Person{
 
+	
+
+	
+
+
+
 	@Id
 	private String idClient;
 
@@ -24,11 +30,13 @@ public class Client extends Person{
 	
 	private char state;
 	
-	public Client() {
+	
+	
+	public Client(String fullName) {
+		super(fullName);
 		// TODO Auto-generated constructor stub
 	}
 
-	
 
 	public String getIdClient() {
 		return idClient;

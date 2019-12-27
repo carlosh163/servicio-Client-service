@@ -27,6 +27,15 @@ public class Person {
 	private String documentNumber; 
 	
 
+	public Person() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Person(String fullName) {
+		super();
+		this.fullName = fullName;
+	}
+
 	public String getFullName() {
 		return fullName;
 	}
