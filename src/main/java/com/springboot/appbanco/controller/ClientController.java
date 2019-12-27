@@ -76,10 +76,9 @@ public class ClientController {
     return service.findAll();
   }
 
-  @GetMapping("/{id}")
+  @SuppressWarnings("rawtypes")
+@GetMapping("/{id}")
   public Mono<ResponseEntity> findById(@PathVariable String id) {
-    
-    
     return service.findById(id).map(p -> ResponseEntity.ok()
     	      .contentType(APPLICATION_JSON)
     	      .body(p))
@@ -88,8 +87,6 @@ public class ClientController {
 			.body(exception.manejarModeloExcepciones(new ModeloNotFoundException("No se encontro "+id)  )));
     	     //.defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Client("NO HAY")));
     
-    
-	//return null;
   }
 
   @PostMapping
