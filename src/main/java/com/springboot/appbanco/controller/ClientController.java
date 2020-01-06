@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.appbanco.exception.ModeloNotFoundException;
 import com.springboot.appbanco.exception.ResponseExceptionHandler;
 import com.springboot.appbanco.model.Account;
+import com.springboot.appbanco.model.AccountDTO;
 import com.springboot.appbanco.model.Client;
 import com.springboot.appbanco.model.CreditAccount;
 import com.springboot.appbanco.service.IClientService;
@@ -71,13 +73,13 @@ public class ClientController {
   }
 
   @ApiOperation(value = "Search all customers", notes = "Returning customers, each client has a list of their Bank Accounts and Credit Accounts.")
-  @GetMapping
+  @GetMapping("/SearchAll")
   public Flux<Client> findAll() {
     return service.findAll();
   }
 
   @SuppressWarnings("rawtypes")
-@GetMapping("/{id}")
+  @GetMapping("/SearchById/{id}")
   public Mono<ResponseEntity> findById(@PathVariable String id) {
     return service.findById(id).map(p -> ResponseEntity.ok()
     	      .contentType(APPLICATION_JSON)
@@ -89,22 +91,22 @@ public class ClientController {
     
   }
 
-  @PostMapping
+  @PostMapping("/Create")
   public Flux<Client> create(@RequestBody Account account) {
     return service.create(account);
   }
 
-  @PostMapping("/RegistrarLocal")
+  @PostMapping("/CreateLocale")
   public Flux<Client> createsL(@RequestBody List<Client> client) {
     return service.createL(client);
   }
 
-  @PutMapping("/{id}")
+  @PutMapping("/Edit/{id}")
   public Mono<Client> update(@RequestBody Client perso, @PathVariable String id) {
     return service.update(perso, id);
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/Remove/{id}")
   public Mono<Void> delete(@PathVariable String id) {
     return service.delete(id);
   }
@@ -117,9 +119,18 @@ public class ClientController {
   }
 
   @ApiOperation(value = "RQ10-Check the balance available on your products such as: bank accounts and credit cards.", notes = " It returns the Client's data with a list of its Bank Accounts and another list of Credit Accounts with all its values ​​per account.")
-  @GetMapping("/BuscarClientePorNroDoc/{nroDoc}")
-  public Mono<Client> findByNroDoc(@PathVariable String nroDoc) {
-    return service.findNroDoc(nroDoc);
+  @GetMapping("/findAccountByNroDocNroAccount/{nroDoc}/{nroAccount}")
+  public Mono<ResponseEntity> findAccountByNroDocNroAccount(@PathVariable String nroDoc,@PathVariable Integer nroAccount) {
+    return service.findNroDoc(nroDoc).flatMap(c-> {
+    	return Flux.fromIterable(c.getAccountList())
+    			.filter(acc -> acc.getAccountNumber().equals(nroAccount)).next() ;
+    })
+    		.map(p -> ResponseEntity.ok()
+    	    	      .contentType(APPLICATION_JSON)
+    	    	      .body(p))
+    	    		.cast(ResponseEntity.class)
+    	    		.defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND)
+    				.body(exception.manejarModeloExcepciones(new ModeloNotFoundException("No se encontro "+nroDoc)  )));
   }
 
   // Consumo Trans:
@@ -293,5 +304,18 @@ public class ClientController {
     });
 
   }
+  
+  @ApiOperation(value = "RQ2(P3)-Perfil consolidado de todos sus productos en diferentes bancos.", notes = "")
+  @GetMapping("/getPerfilConsolidedByNroDoc/{nroDoc}")
+  public Mono<Client> getPerfilConsolidedByNroDoc(@PathVariable String nroDoc) {
+    return service.findNroDoc(nroDoc);
+  }
+  
+  @ApiOperation(value = "RQ4(P3)-Perfil reporte completo y general de cada producto de un banco por intervalo de tiempo especificado (Fecha Apertura).", notes = "")
+  @GetMapping("/getProductsAllOfOneBankByNroDocAndByDateRange/{nroDoc}/{bankName}/{dIni}/{dEnd}")
+  public Flux<AccountDTO> getProductsAllOfOneBankByNroDocAndByDateRange(@PathVariable String nroDoc,@PathVariable String bankName,@PathVariable String dIni,@PathVariable String dEnd) {
+    return service.getReportGeneralByBankAndByDateRange(nroDoc,bankName,dIni,dEnd);
+  }
+  
 
 }

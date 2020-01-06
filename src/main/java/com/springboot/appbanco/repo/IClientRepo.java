@@ -1,6 +1,8 @@
 package com.springboot.appbanco.repo;
 
 
+import java.util.Date;
+
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,8 @@ public interface IClientRepo extends ReactiveMongoRepository<Client,String>{
 	
 	@Query("{'creditAccountList.accountNumber' : ?0}")
 	Flux<Client> findByClientByAccountNumberListCredit(Integer accountNumber);
+	
+	
+	
+	//public Flux<Client> findByDocumentNumberAndDateBetween(String docuNum,Date startDate,Date endDate);
 }

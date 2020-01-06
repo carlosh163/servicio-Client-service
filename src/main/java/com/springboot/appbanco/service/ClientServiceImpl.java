@@ -1,14 +1,21 @@
 package com.springboot.appbanco.service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import com.springboot.appbanco.controller.ClientController;
 import com.springboot.appbanco.model.Account;
+import com.springboot.appbanco.model.AccountDTO;
 import com.springboot.appbanco.model.Client;
 import com.springboot.appbanco.model.CreditAccount;
 import com.springboot.appbanco.repo.IClientRepo;
@@ -21,7 +28,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class ClientServiceImpl implements IClientService {
 
-  
+  private static Logger log = LoggerFactory.getLogger(ClientServiceImpl.class);
   @Autowired
   IClientRepo repo;
   
@@ -60,6 +67,10 @@ public class ClientServiceImpl implements IClientService {
           objAcNew.setOpeningDate(account.getOpeningDate());
           objAcNew.setBalance(account.getBalance());
           objAcNew.setAccountstatus(account.getAccountstatus());
+          objAcNew.setNumMaxDesposit(account.getNumMaxDesposit());
+          objAcNew.setNumMaxRetirement(account.getNumMaxRetirement());
+          objAcNew.setMinBalanceEndMonth(account.getMinBalanceEndMonth());
+          objAcNew.setBankName(account.getBankName());
           objC.getAccountList().add(objAcNew); //List<Client> info..
           
           
@@ -167,7 +178,7 @@ public class ClientServiceImpl implements IClientService {
               objAcNew.setAccountstatus(account.getAccountstatus());              
               objAcNew.setConsumption(0);
               objAcNew.setCreditLimit(account.getCreditLimit());
-              
+              objAcNew.setBankName(account.getBankName());              
               objC.getCreditAccountList().add(objAcNew); //List<Client> info..
               
               
@@ -207,6 +218,84 @@ public class ClientServiceImpl implements IClientService {
   public Flux<Client> findClientsByAccountNumberListCredit(Integer accNumber) {
     return repo.findByClientByAccountNumberListCredit(accNumber);
   }
+
+@Override
+public Flux<AccountDTO> getReportGeneralByBankAndByDateRange(String docuNumber, String bankName, String dateInit,
+		String dateEnd) {
+	// TODO Auto-generated method stub
+	final LocalDate fecha1LD = LocalDate.parse(dateInit).minusDays(2);
+    final LocalDate fecha2LD = LocalDate.parse(dateEnd).plusDays(1);
+	 
+	return repo.findBydocumentNumber(docuNumber).flatMapMany(c -> {
+		
+		//acDTO.setAccountNumber(accountNumber);
+		
+		return Flux.fromIterable(c.getAccountList());
+	}).flatMap(lstAcc ->{
+		AccountDTO acDTO;
+		List<AccountDTO> lstacDTO = new ArrayList<AccountDTO>();
+		log.info("Nombre Bank:"+lstAcc.getBankName());
+		if(lstAcc.getBankName().equals(bankName)) {
+			
+			log.info("Ingreso porque es igual al bank.");
+			acDTO= new AccountDTO();
+			//return Flux.just(lstAcc);
+			acDTO.setAccountNumber(lstAcc.getAccountNumber());
+			acDTO.setProductType(lstAcc.getProductType());
+			acDTO.setAccountType(lstAcc.getAccountType());
+			acDTO.setOpeningDate(lstAcc.getOpeningDate());
+			acDTO.setBalance(lstAcc.getBalance());
+			acDTO.setBankName(lstAcc.getBankName());
+			acDTO.setAccountstatus(lstAcc.getAccountstatus());
+			
+			lstacDTO.add(acDTO);
+		}
+		log.info("tmloLista"+lstacDTO.size());
+			//return Flux.just(acDTO); 
+		
+		//return acDTO;
+		//return Mono.empty();;
+	//});
+		return Flux.fromIterable(lstacDTO);
+}).collectList().flatMapMany(dt -> {
+	//dt.g
+	log.info("tmloListaRBancaria"+dt.size());
+	return repo.findBydocumentNumber(docuNumber).flatMapMany(c -> {
+	
+		
+		return Flux.fromIterable(c.getCreditAccountList());
+	}).flatMap(lstAcc ->{
+		
+		if(lstAcc.getBankName().equals(bankName)) {
+			
+			AccountDTO acDTO= new AccountDTO();
+			acDTO.setAccountNumber(lstAcc.getAccountNumber());
+			acDTO.setProductType(lstAcc.getProductType());
+			acDTO.setAccountType(lstAcc.getAccountType());
+			acDTO.setOpeningDate(lstAcc.getOpeningDate());
+			acDTO.setBalance(lstAcc.getBalance());
+			acDTO.setBankName(lstAcc.getBankName());
+			acDTO.setAccountstatus(lstAcc.getAccountstatus());
+			dt.add(acDTO);
+			log.info("tmloListaFinal"+dt.size());
+			return Flux.fromIterable(dt);
+			//return Flux.just(acDTO); 
+		}else {
+			return Flux.empty();
+			//return new AccountDTO();
+		}
+		
+	}).filter(p -> p.getOpeningDate()
+	        .toInstant().atZone(ZoneId.systemDefault())
+	        .toLocalDate().isAfter(fecha1LD))
+	      .filter(p -> p.getOpeningDate()
+	        .toInstant().atZone(ZoneId.systemDefault())
+	        .toLocalDate().isBefore(fecha2LD));
+		
+  });
   
+
+
+  }
 
 }

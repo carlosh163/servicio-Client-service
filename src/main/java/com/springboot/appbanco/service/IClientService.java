@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.springboot.appbanco.model.Account;
+import com.springboot.appbanco.model.AccountDTO;
 import com.springboot.appbanco.model.Client;
 import com.springboot.appbanco.model.CreditAccount;
 
@@ -37,4 +38,7 @@ public interface IClientService {
   public Mono<Client> createClientACredit(CreditAccount account);
   
   public Flux<Client> findClientsByAccountNumberListCredit(Integer accNumber);
+  
+  //public Flux
+  public Flux<AccountDTO> getReportGeneralByBankAndByDateRange(String docuNumber,String bankName, String dateInit, String dateEnd);
 }

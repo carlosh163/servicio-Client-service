@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 //Ahorro.
 
-public class Account {
+public class AccountDTO {
 
   // private String codAccount;
 
@@ -33,13 +33,9 @@ public class Account {
 
   private double balance; // saldo
 
-  private List<Client> customerList; // Todos los Clientes que poseen una cuenta (Titulares)
+  //private List<Client> customerList; // Todos los Clientes que poseen una cuenta (Titulares)
   // private List<PersonAuthorized> personAuthorizedList; //Personas Autorizadas
 
-//Atributos PROYECTO 2:
-  private Integer numMaxDesposit;
-  private Integer numMaxRetirement;
-  private double minBalanceEndMonth;
 
   private String bankName;
   private char accountstatus; // Activo o Inactivo.
@@ -75,13 +71,6 @@ public class Account {
     this.balance = balance;
   }
 
-  public List<Client> getCustomerList() {
-    return customerList;
-  }
-
-  public void setCustomerList(List<Client> customerList) {
-    this.customerList = customerList;
-  }
 
   public char getAccountstatus() {
     return accountstatus;
@@ -107,29 +96,6 @@ public class Account {
     this.accountType = accountType;
   }
 
-  public Integer getNumMaxDesposit() {
-    return numMaxDesposit;
-  }
-
-  public void setNumMaxDesposit(Integer numMaxDesposit) {
-    this.numMaxDesposit = numMaxDesposit;
-  }
-
-  public Integer getNumMaxRetirement() {
-    return numMaxRetirement;
-  }
-
-  public void setNumMaxRetirement(Integer numMaxRetirement) {
-    this.numMaxRetirement = numMaxRetirement;
-  }
-
-  public double getMinBalanceEndMonth() {
-    return minBalanceEndMonth;
-  }
-
-  public void setMinBalanceEndMonth(double minBalanceEndMonth) {
-    this.minBalanceEndMonth = minBalanceEndMonth;
-  }
 
   public String getBankName() {
     return bankName;
